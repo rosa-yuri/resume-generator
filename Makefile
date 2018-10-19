@@ -45,7 +45,7 @@ html:
 	for f in $(IN_DIR)/*.md; do \
 		FILE_NAME=`basename $$f | sed 's/.md//g'`; \
 		echo $$FILE_NAME.html; \
-		pandoc --section-divs -s $(IN_DIR)/$$FILE_NAME.md -H ./templates/header.html -c static/$$FILE_NAME.css -o ${HTML_DIR}/$$FILE_NAME.html; \
+		pandoc --section-divs -s $(IN_DIR)/$$FILE_NAME.md -H ./templates/header.html -c static/$$FILE_NAME.css -o $(HTML_DIR)/$$FILE_NAME.html; \
 	done
 
 docx:
@@ -61,22 +61,22 @@ pdf: html
 	for f in $(IN_DIR)/*.md; do \
 		FILE_NAME=`basename $$f | sed 's/.md//g'`; \
 		echo $$FILE_NAME.pdf; \
-		phantomjs bin/rasterize.js ${HTML_DIR}/resume.html ${PDF_DIR}/$$FILE_NAME.pdf 0.7; \
+		phantomjs bin/rasterize.js $(HTML_DIR)/resume.html $(PDF_DIR)/$$FILE_NAME.pdf 0.7; \
 	done
 
 gh-pages:
-	git checkout -b ${DEPLOY_BRANCH}
-	git push --set-upstream origin ${DEPLOY_BRANCH}
-	git checkout ${CURRENT_BRANCH}
+	git checkout -b $(DEPLOY_BRANCH)
+	git push --set-upstream origin $(DEPLOY_BRANCH)
+	git checkout $(CURRENT_BRANCH)
 
 del-gh-pages:
-	git push --delete origin ${DEPLOY_BRANCH}
-	git branch -D ${DEPLOY_BRANCH}
+	git push --delete origin $(DEPLOY_BRANCH)
+	git branch -D $(DEPLOY_BRANCH)
 
 deploy: html
 	@echo "Cleaning $(BUILD_DIR)"
 	pandoc --section-divs -s ./content/resume.md -H ./templates/header.html -c static/resume.css -o index.html
-	git checkout ${DEPLOY_BRANCH}
+	git checkout $(DEPLOY_BRANCH)
 	$(call rmdir, $(DEPLOY_DELETE_DIRS))		
 	$(call rm, $(DEPLOY_DELETE_FILES))
 	-git add index.html static
@@ -92,4 +92,4 @@ commit: build
 	git push
 
 clean:
-	${rm} ${OUT_DIR}
+	$(rm) $(OUT_DIR)
