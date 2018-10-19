@@ -42,6 +42,7 @@ html:
 	$(call mkdir, $(OUT_DIR))
 	$(call cp, $(STATIC_DIRS))
 	$(call mkdir, $(HTML_DIR))
+	pandoc --section-divs -s ./content/resume.md -H ./templates/header.html -c static/resume.css -o index.html
 	for f in $(IN_DIR)/*.md; do \
 		FILE_NAME=`basename $$f | sed 's/.md//g'`; \
 		echo $$FILE_NAME.html; \
